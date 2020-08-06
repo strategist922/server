@@ -25,10 +25,7 @@ declare(strict_types=1);
 namespace OCA\WeatherStatus\Controller;
 
 use OCA\WeatherStatus\Service\WeatherStatusService;
-use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\AppFramework\OCS\OCSBadRequestException;
-use OCP\AppFramework\OCS\OCSNotFoundException;
 use OCP\AppFramework\OCSController;
 use OCP\ILogger;
 use OCP\IRequest;
@@ -93,5 +90,4 @@ class WeatherStatusController extends OCSController {
 		$forecast = $this->service->getForecast();
 		return new DataResponse($forecast);
 	}
-
 }

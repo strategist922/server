@@ -54,7 +54,7 @@ class WeatherStatusService {
 		$this->userId = $userId;
 		$this->l10n = $l10n;
 		$this->clientService = $clientService;
-        $this->client = $clientService->newClient();
+		$this->client = $clientService->newClient();
 	}
 
 	public function setMode(int $mode): array {
@@ -74,7 +74,7 @@ class WeatherStatusService {
 			return [
 				'address' => $address,
 			];
-		} else if ($address !== '') {
+		} elseif ($address !== '') {
 			return $this->setAddress($address);
 		} else {
 			return ['success' => false];
@@ -100,11 +100,11 @@ class WeatherStatusService {
 			// priority : city, town, village, municipality
 			if (isset($jsonAddr['city'])) {
 				$cityAddress .= $jsonAddr['city'];
-			} else if (isset($jsonAddr['town'])) {
+			} elseif (isset($jsonAddr['town'])) {
 				$cityAddress .= $jsonAddr['town'];
-			} else if (isset($jsonAddr['village'])) {
+			} elseif (isset($jsonAddr['village'])) {
 				$cityAddress .= $jsonAddr['village'];
-			} else if (isset($jsonAddr['municipality'])) {
+			} elseif (isset($jsonAddr['municipality'])) {
 				$cityAddress .= $jsonAddr['municipality'];
 			} else {
 				return $json['display_name'];
@@ -120,7 +120,7 @@ class WeatherStatusService {
 			} else {
 				return $json['display_name'];
 			}
-		} else if (isset($json['display_name'])) {
+		} elseif (isset($json['display_name'])) {
 			return $json['display_name'];
 		}
 		return null;
@@ -198,32 +198,31 @@ class WeatherStatusService {
 
 	private function requestJSON($url, $params = []) {
 		try {
-            $options = [
-                'headers' => [
-                    'User-Agent' => 'Nextcloud weather status'
-                ],
-            ];
+			$options = [
+				'headers' => [
+					'User-Agent' => 'Nextcloud weather status'
+				],
+			];
 
-            if (count($params) > 0) {
+			if (count($params) > 0) {
 				$paramsContent = http_build_query($params);
 				$url .= '?' . $paramsContent;
-            }
+			}
 
 			$response = $this->client->get($url, $options);
-            $body = $response->getBody();
-            $respCode = $response->getStatusCode();
+			$body = $response->getBody();
+			$respCode = $response->getStatusCode();
 
-            if ($respCode >= 400) {
-                return ['error' => $this->l10n->t('Error')];
-            } else {
+			if ($respCode >= 400) {
+				return ['error' => $this->l10n->t('Error')];
+			} else {
 				return json_decode($body, true);
-            }
-        } catch (\Exception $e) {
-            $this->logger->warning($url . 'API error : ' . $e, array('app' => $this->appName));
-            $response = $e->getResponse();
+			}
+		} catch (\Exception $e) {
+			$this->logger->warning($url . 'API error : ' . $e, ['app' => $this->appName]);
+			$response = $e->getResponse();
 			$headers = $response->getHeaders();
 			return ['error' => $e];
 		}
 	}
-
 }
