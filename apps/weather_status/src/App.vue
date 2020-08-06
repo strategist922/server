@@ -215,6 +215,7 @@ export default {
 					this.saveLocation(this.lat, this.lon)
 				},
 				(error) => {
+					showError(this.$t('weather_status', 'Browser location permission refused, try to manually define a location.'))
 					console.debug('location permission refused')
 					console.debug(error)
 					this.saveMode(MODE_MANUAL_LOCATION)

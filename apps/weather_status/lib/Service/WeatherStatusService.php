@@ -40,6 +40,8 @@ use OCP\Http\Client\IClientService;
  */
 class WeatherStatusService {
 
+	const MODE_BROWSER_LOCATION = 1;
+	const MODE_MANUAL_LOCATION = 2;
 
 	/**
 	 * StatusService constructor.
@@ -153,7 +155,7 @@ class WeatherStatusService {
 			$this->config->setUserValue($this->userId, 'weather_status', 'address', $formattedAddress);
 			$this->config->setUserValue($this->userId, 'weather_status', 'lat', $addressInfo['lat']);
 			$this->config->setUserValue($this->userId, 'weather_status', 'lon', $addressInfo['lon']);
-			$this->config->setUserValue($this->userId, 'weather_status', 'mode', 2);
+			$this->config->setUserValue($this->userId, 'weather_status', 'mode', self::MODE_MANUAL_LOCATION);
 			return [
 				'lat' => $addressInfo['lat'],
 				'lon' => $addressInfo['lon'],
@@ -184,7 +186,7 @@ class WeatherStatusService {
 		$lat = $this->config->getUserValue($this->userId, 'weather_status', 'lat', '');
 		$lon = $this->config->getUserValue($this->userId, 'weather_status', 'lon', '');
 		$address = $this->config->getUserValue($this->userId, 'weather_status', 'address', '');
-		$mode = $this->config->getUserValue($this->userId, 'weather_status', 'mode', 1);
+		$mode = $this->config->getUserValue($this->userId, 'weather_status', 'mode', self::MODE_BROWSER_LOCATION);
 		return [
 			'lat' => $lat,
 			'lon' => $lon,
