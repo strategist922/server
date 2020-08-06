@@ -281,8 +281,20 @@ export default {
 		onBrowserLocationClick() {
 			this.askBrowserLocation()
 		},
-		onPersonalAddressClick() {
-			showError('NYI')
+		async onPersonalAddressClick() {
+			this.loading = true
+			try {
+				const loc = await network.usePersonalAddress()
+				this.lat = loc.lat
+				this.lon = loc.lon
+				this.address = loc.address
+				this.mode = MODE_MANUAL_LOCATION
+				this.startLoop()
+			} catch (err) {
+				showError(this.$t('weather_status', 'There was an error using personal address.'))
+				console.debug(err)
+				this.loading = false
+			}
 		},
 		onAddressSubmit() {
 			const newAddress = this.$refs.addressInput.$el.querySelector('input[type="text"]').value

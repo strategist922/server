@@ -28,6 +28,9 @@ namespace OCA\WeatherStatus\Service;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\Accounts\IAccountManager;
+use OCP\Accounts\PropertyDoesNotExistException;
+use OCP\IUserManager;
 use OCP\Http\Client\IClientService;
 
 /**
@@ -48,11 +51,15 @@ class WeatherStatusService {
 								IClientService $clientService,
 								IConfig $config,
 								IL10N $l10n,
+								IAccountManager $accountManager,
+								IUserManager $userManager,
 								string $userId) {
 		$this->timeFactory = $timeFactory;
 		$this->config = $config;
 		$this->userId = $userId;
 		$this->l10n = $l10n;
+		$this->accountManager = $accountManager;
+		$this->userManager = $userManager;
 		$this->clientService = $clientService;
 		$this->client = $clientService->newClient();
 	}
@@ -60,6 +67,19 @@ class WeatherStatusService {
 	public function setMode(int $mode): array {
 		$this->config->setUserValue($this->userId, 'weather_status', 'mode', $mode);
 		return ['success' => true];
+	}
+
+	public function usePersonalAddress(): array {
+		$account = $this->accountManager->getAccount($this->userManager->get($this->userId));
+		try {
+			$address = $account->getProperty('address')->getValue();
+		} catch (PropertyDoesNotExistException $e) {
+			return ['success' => false];
+		}
+		if ($address === '') {
+			return ['success' => false];
+		}
+		return $this->setAddress($address);
 	}
 
 	/**

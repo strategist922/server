@@ -57,6 +57,15 @@ class WeatherStatusController extends OCSController {
 	 *
 	 * @return DataResponse
 	 */
+	public function usePersonalAddress(): DataResponse {
+		return new DataResponse($this->service->usePersonalAddress());
+	}
+
+	/**
+	 * @NoAdminRequired
+	 *
+	 * @return DataResponse
+	 */
 	public function setMode($mode): DataResponse {
 		return new DataResponse($this->service->setMode($mode));
 	}

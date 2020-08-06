@@ -71,6 +71,17 @@ const setMode = async(mode) => {
 }
 
 /**
+ *
+ * @returns {Promise<Object>}
+ */
+const usePersonalAddress = async() => {
+	const url = generateOcsUrl('apps/weather_status/api/v1', 2) + 'use-personal'
+	const response = await HttpClient.put(url)
+
+	return response.data.ocs.data
+}
+
+/**
  * Fetches the location information for current user
  *
  * @returns {Promise<Object>}
@@ -96,6 +107,7 @@ const fetchForecast = async() => {
 }
 
 export {
+	usePersonalAddress,
 	setMode,
 	getLocation,
 	setLocation,
