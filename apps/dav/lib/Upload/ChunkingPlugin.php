@@ -26,6 +26,7 @@
 namespace OCA\DAV\Upload;
 
 use OCA\DAV\Connector\Sabre\Directory;
+use OCA\DAV\Connector\Sabre\Exception\Forbidden;
 use Sabre\DAV\Exception\BadRequest;
 use Sabre\DAV\Exception\NotFound;
 use Sabre\DAV\INode;
@@ -90,11 +91,12 @@ class ChunkingPlugin extends ServerPlugin {
 		// do a move manually, skipping Sabre's default "delete" for existing nodes
 		try {
 			$this->server->tree->move($path, $destination);
-		} catch (\Exception $e) {
+		} catch (Forbidden $e) {
 			$sourceNode = $this->server->tree->getNodeForPath($path);
 			if ($sourceNode instanceof FutureFile) {
 				$sourceNode->delete();
 			}
+			throw $e;
 		}
 
 		// trigger all default events (copied from CorePlugin::move)
