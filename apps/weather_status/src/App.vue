@@ -49,12 +49,6 @@
 					@submit="onAddressSubmit">
 					{{ $t('weather_status', 'Set custom address') }}
 				</ActionInput>
-				<ActionButton
-					icon="icon-settings"
-					:close-after-click="true"
-					@click="onPersonalAddressClick">
-					{{ $t('weather_status', 'Use personal settings location') }}
-				</ActionButton>
 			</Actions>
 		</div>
 	</li>
@@ -163,7 +157,7 @@ export default {
 		visibleMessage() {
 			return this.sixHoursWeatherForecast
 				? this.sixHoursTempForecast + '° ' + this.weatherText
-				: this.$t('weather_status', 'Weather status')
+				: this.$t('weather_status', 'Set location for weather')
 		},
 		weatherLinkTarget() {
 			return 'https://www.windy.com/-Rain-thunder-rain?rain,' + this.lat + ',' + this.lon + ',11'
@@ -224,7 +218,7 @@ export default {
 					if (this.lat && this.lon) {
 						this.startLoop()
 					} else {
-						this.loading = false
+						this.usePersonalAddress()
 					}
 				})
 			} else {
@@ -282,7 +276,7 @@ export default {
 		onBrowserLocationClick() {
 			this.askBrowserLocation()
 		},
-		async onPersonalAddressClick() {
+		async usePersonalAddress() {
 			this.loading = true
 			try {
 				const loc = await network.usePersonalAddress()
