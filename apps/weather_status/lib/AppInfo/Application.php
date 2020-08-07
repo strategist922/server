@@ -30,6 +30,10 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Dashboard\RegisterWidgetEvent;
+use OCP\EventDispatcher\IEventDispatcher;
+use OCP\EventDispatcher\Event;
+use OCP\Util;
 
 /**
  * Class Application
@@ -48,6 +52,11 @@ class Application extends App implements IBootstrap {
 	 */
 	public function __construct(array $urlParams = []) {
 		parent::__construct(self::APP_ID, $urlParams);
+
+		$dispatcher = $this->getContainer()->query(IEventDispatcher::class);
+		$dispatcher->addListener(RegisterWidgetEvent::class, function (Event $e) {
+			Util::addScript('weather_status', 'weather-status');
+        });
 	}
 
 	/**
